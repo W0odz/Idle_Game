@@ -13,7 +13,7 @@ var vitality_per_click: float = 0.0
 
 ## Add vitality (per click or passive gen)
 func add_vitality (amount: float) -> void:
-	if amount <- 0.0:
+	if amount <= 0.0:
 		return
 	vitality += amount
 	vitality_changed.emit(vitality)

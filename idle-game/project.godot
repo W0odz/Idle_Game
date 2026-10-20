@@ -14,6 +14,11 @@ config/name="Idle_Game"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+CurrencyManager="*uid://emlahhjntqcp"
+GameManager="*uid://chrb148iaiu7u"
+
 [display]
 
 window/stretch/mode="canvas_items"
