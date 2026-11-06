@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TreeOfLifeData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Resources/tree_of_life_data.gd" id="1_tree"]
+
+[resource]
+script = ExtResource("1_tree")
+id = "tree_of_life"
+display_name = "Árvore da Vida"
+description = "A fonte primordial de energia da ilha. Cada toque canaliza vitalidade para o ecossistema."
+base_cost = 10.0
+cost_multiplier = 1.2
+base_click_power = 1.0
+click_power_per_level = 1.5

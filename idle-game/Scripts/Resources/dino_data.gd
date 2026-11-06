@@ -8,13 +8,13 @@ extends Resource
 @export_multiline var description: String = ""
 @export var icon: Texture2D
 
-@export_group("Passive Economy")
-## Base cost to create the first iteration of this species
-@export var base_cost: float = 10.0
-## Cost multiplier to create more dinos from the same species
+@export_group("Production Bonus Economy")
+## Base cost to create the first dinosaur of this species
+@export var base_cost: float = 50.0
+## Cost multiplier to create more dinos of the same species
 @export var cost_multiplier: float = 1.15
-## Vitality/sec that each unit generates
-@export var passive_vitality_per_sec: float = 5.0
+## Bonus added to the total passive production multiplier per unit (e.g. 0.05 = +5% per dino)
+@export var bonus_multiplier_per_unit: float = 0.05
 
 @export_group("3D Visual")
 @export var model_scene: PackedScene
@@ -22,8 +22,10 @@ extends Resource
 @export_enum("ground", "flying", "water") var habitat: String = "ground"
 @export var walk_speed: float = 2.0
 
+## Calculates cost to purchase the next dino of this species
 func get_cost_for_next(current_count: int) -> float:
 	return base_cost * pow(cost_multiplier, current_count)
-	
-func get_total_production(current_count: int ) -> float:
-	return (passive_vitality_per_sec * current_count)
+
+## Calculates total bonus percentage contributed by this species (e.g. 10 dinos * 0.05 = +0.50 -> +50%)
+func get_total_bonus(current_count: int) -> float:
+	return bonus_multiplier_per_unit * current_count

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DinoData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Resources/dino_data.gd" id="1_dino"]
+
+[resource]
+script = ExtResource("1_dino")
+id = "triceratops"
+common_name = "Tricerátops"
+scientific_name = "Triceratops horridus"
+description = "Um imponente herbívoro cuja presença e pastoreio fortalecem imensamente a fertilidade da ilha."
+base_cost = 350.0
+cost_multiplier = 1.18
+bonus_multiplier_per_unit = 0.1
+scale_factor = 1.2
+habitat = "ground"
+walk_speed = 1.5
