@@ -9,7 +9,7 @@ var vitality: float = 0.0
 
 ## Calculated rates
 var vitality_per_second: float = 0.0
-var vitality_per_click: float = 0.0
+var vitality_per_click: float = 1.0
 
 ## UI Update Throttling (Limits continuous passive updates to 10 Hz for mobile CPU optimization)
 const UI_UPDATE_INTERVAL: float = 0.1

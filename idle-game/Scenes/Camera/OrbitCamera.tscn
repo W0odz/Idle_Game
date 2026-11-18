@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scenes/Camera/orbit_camera.gd" id="1_script"]
+
+[node name="OrbitCamera" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="PitchPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="PitchPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
+current = true
+fov = 50.0

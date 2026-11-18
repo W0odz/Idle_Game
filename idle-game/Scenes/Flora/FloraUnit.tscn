@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Material" path="res://Assets/Materials/mat_tree_leaves.tres" id="1_bush_mat"]
+[ext_resource type="Material" path="res://Assets/Materials/mat_berry.tres" id="2_berry_mat"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_bush"]
+material = ExtResource("1_bush_mat")
+radius = 0.4
+height = 0.65
+
+[sub_resource type="SphereMesh" id="SphereMesh_berry"]
+material = ExtResource("2_berry_mat")
+radius = 0.12
+height = 0.24
+
+[node name="FloraUnit" type="Node3D"]
+
+[node name="Bush" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("SphereMesh_bush")
+
+[node name="Berry1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.45, 0.2)
+mesh = SubResource("SphereMesh_berry")
+
+[node name="Berry2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.4, -0.15)
+mesh = SubResource("SphereMesh_berry")
+
+[node name="Berry3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.55, -0.2)
+mesh = SubResource("SphereMesh_berry")
