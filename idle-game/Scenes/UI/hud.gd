@@ -3,6 +3,7 @@ extends Control
 @onready var vitality_label: Label = %VitalityLabel
 @onready var rate_label: Label = %RateLabel
 @onready var bottom_sheet: PanelContainer = %BottomSheet
+@onready var handle_area: Control = %HandleArea
 @onready var items_container: VBoxContainer = %ItemsContainer
 
 @onready var tab_tree_btn: Button = %TabTreeBtn
@@ -19,25 +20,43 @@ enum Tab { NONE, TREE, FLORA, DINO }
 var current_tab: Tab = Tab.NONE
 
 var active_rows: Dictionary = {}
-
-# Rolling window to estimate actual taps per second
 var recent_tap_times: Array[float] = []
+
+# Vertical Y coordinates of bottom_sheet.position.y:
+# In an 800px high viewport:
+# 1. POS_CLOSED = 800.0 (completely offscreen below the bottom bar)
+# 2. POS_MID = 420.0 (open halfway, diorama visible above)
+# 3. POS_FULL = 76.0 (full screen, just beneath the top bar)
+const POS_CLOSED: float = 800.0
+const POS_MID: float = 420.0
+const POS_FULL: float = 76.0
+
+var is_dragging_sheet: bool = false
+var drag_start_mouse_y: float = 0.0
+var drag_start_sheet_y: float = 0.0
+var active_tween: Tween = null
+
+const COLOR_ACTIVE: Color = Color(0.45, 0.88, 0.42, 1.0)
+const COLOR_INACTIVE: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 func _ready() -> void:
 	CurrencyManager.vitality_changed.connect(_on_vitality_changed)
 	CurrencyManager.rates_updated.connect(_on_rates_updated)
 	GameManager.player_tapped.connect(func(_amount): record_player_tap())
 
-	tab_tree_btn.pressed.connect(func(): set_tab(Tab.TREE))
-	tab_flora_btn.pressed.connect(func(): set_tab(Tab.FLORA))
-	tab_dino_btn.pressed.connect(func(): set_tab(Tab.DINO))
-	close_sheet_btn.pressed.connect(func(): set_tab(Tab.NONE))
+	tab_tree_btn.pressed.connect(func(): on_tab_button_pressed(Tab.TREE))
+	tab_flora_btn.pressed.connect(func(): on_tab_button_pressed(Tab.FLORA))
+	tab_dino_btn.pressed.connect(func(): on_tab_button_pressed(Tab.DINO))
+	close_sheet_btn.pressed.connect(func(): close_sheet())
+
+	handle_area.gui_input.connect(_on_handle_gui_input)
 
 	update_vitality_display()
-	set_tab(Tab.NONE)
+	update_tab_icons_color()
+	bottom_sheet.position.y = POS_CLOSED
+	bottom_sheet.visible = false
 
 func _process(delta: float) -> void:
-	# Purge taps older than 1.5 seconds to compute a rolling tap-rate
 	var now := Time.get_ticks_msec() / 1000.0
 	while not recent_tap_times.is_empty() and (now - recent_tap_times[0]) > 1.5:
 		recent_tap_times.pop_front()
@@ -52,10 +71,8 @@ func record_player_tap() -> void:
 func update_vitality_display() -> void:
 	vitality_label.text = CurrencyManager.format_number(CurrencyManager.vitality)
 
-	# Calculate taps per second over the last rolling window
 	var tap_rate: float = 0.0
 	if not recent_tap_times.is_empty():
-		# Count over 1.5 seconds window -> rate per second
 		tap_rate = float(recent_tap_times.size()) / 1.5
 
 	var click_vitality_per_sec: float = tap_rate * CurrencyManager.vitality_per_click
@@ -63,15 +80,86 @@ func update_vitality_display() -> void:
 
 	rate_label.text = "+%s/s" % CurrencyManager.format_number(combined_rate)
 
-func set_tab(tab: Tab) -> void:
+func on_tab_button_pressed(tab: Tab) -> void:
+	if current_tab == tab and bottom_sheet.visible:
+		# Clicking the already selected tab toggles it closed
+		close_sheet()
+		return
+
+	# Switching to a different tab keeps the sheet open at its current height!
 	current_tab = tab
-	if current_tab == Tab.NONE:
+	bottom_sheet.visible = true
+	close_sheet_btn.visible = true
+	update_tab_icons_color()
+	build_items()
+
+	# Only animate if opening from closed state
+	if bottom_sheet.position.y > POS_MID + 30.0:
+		snap_sheet_to(POS_MID, true)
+
+func close_sheet() -> void:
+	current_tab = Tab.NONE
+	update_tab_icons_color()
+	close_sheet_btn.visible = false
+	snap_sheet_to(POS_CLOSED, true, func():
 		bottom_sheet.visible = false
-		close_sheet_btn.visible = false
+	)
+
+func update_tab_icons_color() -> void:
+	tab_tree_btn.modulate = COLOR_ACTIVE if current_tab == Tab.TREE else COLOR_INACTIVE
+	tab_flora_btn.modulate = COLOR_ACTIVE if current_tab == Tab.FLORA else COLOR_INACTIVE
+	tab_dino_btn.modulate = COLOR_ACTIVE if current_tab == Tab.DINO else COLOR_INACTIVE
+
+func _on_handle_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			is_dragging_sheet = true
+			drag_start_mouse_y = event.global_position.y
+			drag_start_sheet_y = bottom_sheet.position.y
+			if active_tween and active_tween.is_valid():
+				active_tween.kill()
+		else:
+			if is_dragging_sheet:
+				is_dragging_sheet = false
+				finalize_drag_snap()
+
+	elif event is InputEventMouseMotion and is_dragging_sheet:
+		var delta_y: float = event.global_position.y - drag_start_mouse_y
+		var new_y: float = drag_start_sheet_y + delta_y
+		bottom_sheet.position.y = clampf(new_y, POS_FULL, POS_CLOSED)
+
+	elif event is InputEventScreenDrag and is_dragging_sheet:
+		var delta_y: float = event.relative.y
+		var new_y: float = bottom_sheet.position.y + delta_y
+		bottom_sheet.position.y = clampf(new_y, POS_FULL, POS_CLOSED)
+
+func finalize_drag_snap() -> void:
+	var current_y: float = bottom_sheet.position.y
+
+	var close_threshold: float = (POS_MID + POS_CLOSED) / 2.0
+	var expand_threshold: float = (POS_MID + POS_FULL) / 2.0
+
+	if current_y > close_threshold:
+		close_sheet()
+	elif current_y < expand_threshold:
+		snap_sheet_to(POS_FULL, true)
 	else:
-		bottom_sheet.visible = true
-		close_sheet_btn.visible = true
-		build_items()
+		snap_sheet_to(POS_MID, true)
+
+func snap_sheet_to(target_y: float, animate: bool = true, on_complete: Callable = Callable()) -> void:
+	if active_tween and active_tween.is_valid():
+		active_tween.kill()
+
+	if not animate:
+		bottom_sheet.position.y = target_y
+		if on_complete.is_valid():
+			on_complete.call()
+		return
+
+	active_tween = create_tween()
+	active_tween.tween_property(bottom_sheet, "position:y", target_y, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	if on_complete.is_valid():
+		active_tween.tween_callback(on_complete)
 
 func build_items() -> void:
 	for child in items_container.get_children():

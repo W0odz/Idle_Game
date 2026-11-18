@@ -17,7 +17,7 @@ shadow_size = 4
 shadow_offset = Vector2(0, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sheet"]
-bg_color = Color(0.12, 0.16, 0.18, 0.88)
+bg_color = Color(0.12, 0.16, 0.18, 0.96)
 corner_radius_top_left = 24
 corner_radius_top_right = 24
 expand_margin_top = 4.0
@@ -30,7 +30,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabbar"]
-bg_color = Color(0.1, 0.15, 0.18, 0.95)
+bg_color = Color(0.09, 0.13, 0.15, 1)
 
 [node name="HUD" type="CanvasLayer"]
 
@@ -106,27 +106,38 @@ stretch_mode = 5
 [node name="BottomSheet" type="PanelContainer" parent="RootControl"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -340.0
-offset_bottom = -64.0
+offset_top = 420.0
+offset_bottom = 200.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_sheet")
 
 [node name="VBox" type="VBoxContainer" parent="RootControl/BottomSheet"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="HandleCenter" type="CenterContainer" parent="RootControl/BottomSheet/VBox"]
-custom_minimum_size = Vector2(0, 16)
+[node name="HandleArea" type="Control" parent="RootControl/BottomSheet/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
+mouse_default_cursor_shape = 9
 
-[node name="Handle" type="Panel" parent="RootControl/BottomSheet/VBox/HandleCenter"]
-custom_minimum_size = Vector2(50, 5)
+[node name="HandleCenter" type="CenterContainer" parent="RootControl/BottomSheet/VBox/HandleArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Handle" type="Panel" parent="RootControl/BottomSheet/VBox/HandleArea/HandleCenter"]
+custom_minimum_size = Vector2(56, 6)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_handle")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="RootControl/BottomSheet/VBox"]
@@ -141,7 +152,7 @@ size_flags_vertical = 3
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 180
 
 [node name="ItemsContainer" type="VBoxContainer" parent="RootControl/BottomSheet/VBox/ScrollContainer/Margin"]
 unique_name_in_owner = true
@@ -150,6 +161,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="BottomTabBar" type="PanelContainer" parent="RootControl"]
+z_index = 5
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 1
 anchors_preset = 12
