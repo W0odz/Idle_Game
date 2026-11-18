@@ -1,0 +1,184 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/hud.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_drop.svg" id="2_drop"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_menu.svg" id="3_menu"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_tree.svg" id="4_tree"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_leaf.svg" id="5_leaf"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_footprint.svg" id="6_footprint"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_close.svg" id="7_close"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sheet"]
+bg_color = Color(0.12, 0.16, 0.18, 0.88)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+expand_margin_top = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_handle"]
+bg_color = Color(1, 1, 1, 0.75)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tabbar"]
+bg_color = Color(0.1, 0.15, 0.18, 0.95)
+
+[node name="HUD" type="CanvasLayer"]
+
+[node name="RootControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="TopBar" type="HBoxContainer" parent="RootControl"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 56.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="DropIcon" type="TextureRect" parent="RootControl/TopBar"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_drop")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VitalityLabel" type="Label" parent="RootControl/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "900 M"
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="RootControl/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="MenuBtn" type="TextureButton" parent="RootControl/TopBar"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_vertical = 4
+texture_normal = ExtResource("3_menu")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="BottomSheet" type="PanelContainer" parent="RootControl"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -340.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_sheet")
+
+[node name="VBox" type="VBoxContainer" parent="RootControl/BottomSheet"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HandleCenter" type="CenterContainer" parent="RootControl/BottomSheet/VBox"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="Handle" type="Panel" parent="RootControl/BottomSheet/VBox/HandleCenter"]
+custom_minimum_size = Vector2(50, 5)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_handle")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RootControl/BottomSheet/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Margin" type="MarginContainer" parent="RootControl/BottomSheet/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="ItemsContainer" type="VBoxContainer" parent="RootControl/BottomSheet/VBox/ScrollContainer/Margin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="BottomTabBar" type="PanelContainer" parent="RootControl"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_tabbar")
+
+[node name="Margin" type="MarginContainer" parent="RootControl/BottomTabBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+
+[node name="HBox" type="HBoxContainer" parent="RootControl/BottomTabBar/Margin"]
+layout_mode = 2
+alignment = 1
+
+[node name="TabTreeBtn" type="Button" parent="RootControl/BottomTabBar/Margin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+flat = true
+icon = ExtResource("4_tree")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TabFloraBtn" type="Button" parent="RootControl/BottomTabBar/Margin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+flat = true
+icon = ExtResource("5_leaf")
+icon_alignment = 1
+expand_icon = true
+
+[node name="TabDinoBtn" type="Button" parent="RootControl/BottomTabBar/Margin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+flat = true
+icon = ExtResource("6_footprint")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Spacer" type="Control" parent="RootControl/BottomTabBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseSheetBtn" type="Button" parent="RootControl/BottomTabBar/Margin/HBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+flat = true
+icon = ExtResource("7_close")
+icon_alignment = 1
+expand_icon = true

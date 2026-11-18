@@ -1,0 +1,132 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/upgrade_row.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_tree.svg" id="2_icon"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_drop.svg" id="3_drop"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_main"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.55, 0.8, 0.35, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
+bg_color = Color(0.35, 0.45, 0.3, 0.5)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+bg_color = Color(0.32, 0.65, 0.35, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[node name="UpgradeRow" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 72)
+offset_right = 360.0
+offset_bottom = 72.0
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_main")
+script = ExtResource("1_script")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RowHBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="IconWrapper" type="VBoxContainer" parent="VBox/RowHBox"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="BadgePanel" type="PanelContainer" parent="VBox/RowHBox/IconWrapper"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="IconRect" type="TextureRect" parent="VBox/RowHBox/IconWrapper/BadgePanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LevelLabel" type="Label" parent="VBox/RowHBox/IconWrapper"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.85, 1)
+theme_override_font_sizes/font_size = 10
+text = "Nível 50"
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="VBox/RowHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "ÁRVORE ÂMBAR"
+vertical_alignment = 1
+
+[node name="BuyButton" type="Button" parent="VBox/RowHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 36)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
+
+[node name="BtnContent" type="HBoxContainer" parent="VBox/RowHBox/BuyButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="DropIcon" type="TextureRect" parent="VBox/RowHBox/BuyButton/BtnContent"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("3_drop")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CostLabel" type="Label" parent="VBox/RowHBox/BuyButton/BtnContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.18, 0.12, 1)
+theme_override_font_sizes/font_size = 12
+text = "870 M"
+vertical_alignment = 1
+
+[node name="Divider" type="ColorRect" parent="VBox"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 1, 1, 0.25)

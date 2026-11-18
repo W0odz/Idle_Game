@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://lwektk1fvwll"]
+
+[ext_resource type="Script" uid="uid://b6drh4cdsb5tj" path="res://Scenes/main.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Diorama/TreeOfLife.tscn" id="2_tree"]
+[ext_resource type="PackedScene" path="res://Scenes/Camera/OrbitCamera.tscn" id="3_camera"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/HUD.tscn" id="4_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.38, 0.65, 0.88, 1)
+sky_horizon_color = Color(0.75, 0.82, 0.9, 1)
+ground_bottom_color = Color(0.18, 0.28, 0.35, 1)
+ground_horizon_color = Color(0.75, 0.82, 0.9, 1)
+
+[sub_resource type="Sky" id="Sky_env"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_env")
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.4
+
+[node name="Main" type="Node3D" unique_id=1164239332]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1927791446]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1660965218]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 5, 10, 5)
+shadow_enabled = true
+directional_shadow_max_distance = 30.0
+
+[node name="TreeOfLife" parent="." unique_id=1018185727 instance=ExtResource("2_tree")]
+
+[node name="FloraContainer" type="Node3D" parent="." unique_id=970810250]
+
+[node name="DinoContainer" type="Node3D" parent="." unique_id=27283913]
+
+[node name="OrbitCamera" parent="." unique_id=706261263 instance=ExtResource("3_camera")]
+
+[node name="HUD" parent="." unique_id=467041550 instance=ExtResource("4_hud")]
