@@ -26,9 +26,9 @@ window/size/viewport_width=450
 window/size/viewport_height=800
 window/size/window_width_override=450
 window/size/window_height_override=800
-window/handheld/orientation=1
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [file_customization]
 
@@ -40,6 +40,10 @@ folder_colors={
 "res://Scripts/": "red"
 }
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -48,3 +52,4 @@ folder_colors={
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true

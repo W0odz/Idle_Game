@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="FloraData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="FloraData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Resources/flora_data.gd" id="1_flora"]
+[ext_resource type="PackedScene" path="res://Scenes/Flora/AncientMossUnit.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_flora")
 id = "ancient_moss"
 display_name = "Musgo Primordial"
 description = "Uma vegetação rasteira resiliente que absorve umidade e gera energia vital constantemente."
+required_tree_level = 1
 base_cost = 15.0
 cost_multiplier = 1.1
 passive_vitality_per_sec = 1.0
+click_power_per_level = 0.5
+model_scene = ExtResource("2_scene")

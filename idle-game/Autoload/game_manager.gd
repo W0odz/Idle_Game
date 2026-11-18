@@ -1,6 +1,7 @@
 extends Node
 
 ## Signals for the 3D scene and UI to react to economy purchases
+signal player_tapped(earned_amount: float)
 signal dino_spawned(dino_data: DinoData, total_owned: int)
 signal flora_upgraded(flora_data: FloraData, current_level: int)
 signal tree_upgraded(tree_data: TreeOfLifeData, current_level: int)
@@ -71,6 +72,7 @@ func _process(delta: float) -> void:
 func perform_click() -> float:
 	var earned: float = CurrencyManager.vitality_per_click
 	CurrencyManager.add_vitality(earned, true)
+	player_tapped.emit(earned)
 	return earned
 
 ## Upgrades the central Tree of Life (Active Click Power)

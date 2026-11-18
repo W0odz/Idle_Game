@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scenes/Dinos/dino_unit.gd" id="1_script"]
+[ext_resource type="Material" path="res://Assets/Materials/mat_compy.tres" id="2_compy_mat"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pill"]
+material = ExtResource("2_compy_mat")
+radius = 0.22
+height = 0.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_col"]
+radius = 0.22
+height = 0.8
+
+[node name="CompsognathusUnit" type="CharacterBody3D"]
+script = ExtResource("1_script")
+move_speed = 3.2
+wander_radius = 5.8
+min_idle_time = 1.0
+max_idle_time = 3.0
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Pill" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("CapsuleMesh_pill")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("CapsuleShape3D_col")

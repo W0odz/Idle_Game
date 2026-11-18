@@ -7,6 +7,10 @@ extends Resource
 @export_multiline var description: String = ""
 @export var icon: Texture2D
 
+@export_group("Unlock Conditions")
+## Minimum Tree of Life level required to unlock this flora
+@export var required_tree_level: int = 1
+
 @export_group("Passive Economy")
 ## Planting or upgrading cost for this flora element
 @export var base_cost: float = 15.0

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="DinoData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="DinoData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Resources/dino_data.gd" id="1_dino"]
+[ext_resource type="PackedScene" path="res://Scenes/Dinos/CompsognathusUnit.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_dino")
@@ -8,9 +9,12 @@ id = "compsognathus"
 common_name = "Compsognato"
 scientific_name = "Compsognathus longipes"
 description = "Pequeno e ágil predador que patrulha o solo da ilha, estimulando a circulação de energia."
+required_tree_level = 1
 base_cost = 50.0
 cost_multiplier = 1.15
+passive_vitality_per_sec = 2.0
 bonus_multiplier_per_unit = 0.03
 scale_factor = 0.5
 habitat = "ground"
 walk_speed = 3.0
+model_scene = ExtResource("2_scene")

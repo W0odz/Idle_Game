@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="FloraData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="FloraData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Resources/flora_data.gd" id="1_flora"]
+[ext_resource type="PackedScene" path="res://Scenes/Flora/GiantFernUnit.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_flora")
 id = "giant_fern"
 display_name = "Samambaia Gigante"
 description = "Folhagens frondosas da era mesozoica com alta capacidade de fotossíntese primitiva."
+required_tree_level = 3
 base_cost = 100.0
 cost_multiplier = 1.12
 passive_vitality_per_sec = 8.0
+click_power_per_level = 3.0
+model_scene = ExtResource("2_scene")

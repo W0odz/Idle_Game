@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://Scenes/UI/upgrade_row.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_tree.svg" id="2_icon"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_drop.svg" id="3_drop"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_lock.svg" id="4_lock"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_main"]
 
@@ -12,19 +13,19 @@ corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
-content_margin_left = 14.0
-content_margin_right = 14.0
+content_margin_left = 12.0
+content_margin_right = 12.0
 content_margin_top = 8.0
 content_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
-bg_color = Color(0.35, 0.45, 0.3, 0.5)
+bg_color = Color(0.24, 0.28, 0.26, 0.6)
 corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
-content_margin_left = 14.0
-content_margin_right = 14.0
+content_margin_left = 12.0
+content_margin_right = 12.0
 content_margin_top = 8.0
 content_margin_bottom = 8.0
 
@@ -36,9 +37,9 @@ corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 
 [node name="UpgradeRow" type="PanelContainer"]
-custom_minimum_size = Vector2(0, 72)
-offset_right = 360.0
-offset_bottom = 72.0
+custom_minimum_size = Vector2(0, 84)
+offset_right = 380.0
+offset_bottom = 84.0
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_main")
 script = ExtResource("1_script")
@@ -57,6 +58,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="BadgePanel" type="PanelContainer" parent="VBox/RowHBox/IconWrapper"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -80,18 +82,38 @@ theme_override_font_sizes/font_size = 10
 text = "Nível 50"
 horizontal_alignment = 1
 
-[node name="NameLabel" type="Label" parent="VBox/RowHBox"]
-unique_name_in_owner = true
+[node name="InfoVBox" type="VBoxContainer" parent="VBox/RowHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="NameLabel" type="Label" parent="VBox/RowHBox/InfoVBox"]
+unique_name_in_owner = true
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "ÁRVORE ÂMBAR"
-vertical_alignment = 1
+
+[node name="BenefitLabel" type="Label" parent="VBox/RowHBox/InfoVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.88, 0.55, 1)
+theme_override_font_sizes/font_size = 11
+text = "+2.00/s (Atual: +10.00/s)"
+
+[node name="ConditionLabel" type="Label" parent="VBox/RowHBox/InfoVBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.72, 0.35, 1)
+theme_override_font_sizes/font_size = 10
+text = "🔒 Requer Árvore Nv. 3"
+autowrap_mode = 2
 
 [node name="BuyButton" type="Button" parent="VBox/RowHBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(90, 36)
+custom_minimum_size = Vector2(96, 36)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
@@ -100,6 +122,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 
 [node name="BtnContent" type="HBoxContainer" parent="VBox/RowHBox/BuyButton"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -110,11 +133,23 @@ alignment = 1
 theme_override_constants/separation = 4
 
 [node name="DropIcon" type="TextureRect" parent="VBox/RowHBox/BuyButton/BtnContent"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(12, 12)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("3_drop")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LockIcon" type="TextureRect" parent="VBox/RowHBox/BuyButton/BtnContent"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_lock")
 expand_mode = 1
 stretch_mode = 5
 

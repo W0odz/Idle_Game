@@ -1,29 +1,15 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://Scenes/Dinos/dino_unit.gd" id="1_script"]
 [ext_resource type="Material" path="res://Assets/Materials/mat_dino.tres" id="2_dino_mat"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pill"]
 material = ExtResource("2_dino_mat")
 radius = 0.35
-height = 1.1
-
-[sub_resource type="SphereMesh" id="SphereMesh_head"]
-material = ExtResource("2_dino_mat")
-radius = 0.3
-height = 0.55
-
-[sub_resource type="BoxMesh" id="BoxMesh_snout"]
-material = ExtResource("2_dino_mat")
-size = Vector3(0.25, 0.2, 0.3)
-
-[sub_resource type="SphereMesh" id="SphereMesh_tail"]
-material = ExtResource("2_dino_mat")
-radius = 0.15
-height = 0.6
+height = 1.3
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_col"]
-radius = 0.4
+radius = 0.35
 height = 1.3
 
 [node name="DinoUnit" type="CharacterBody3D"]
@@ -31,22 +17,10 @@ script = ExtResource("1_script")
 
 [node name="Visuals" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.45, 0)
-mesh = SubResource("CapsuleMesh_body")
-
-[node name="Head" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.45)
-mesh = SubResource("SphereMesh_head")
-
-[node name="Snout" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.7)
-mesh = SubResource("BoxMesh_snout")
-
-[node name="Tail" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.45, 0.65)
-mesh = SubResource("SphereMesh_tail")
+[node name="Pill" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("CapsuleMesh_pill")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("CapsuleShape3D_col")

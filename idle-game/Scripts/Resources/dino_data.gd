@@ -8,6 +8,14 @@ extends Resource
 @export_multiline var description: String = ""
 @export var icon: Texture2D
 
+@export_group("Unlock Conditions")
+## Minimum Tree of Life level required to unlock this species
+@export var required_tree_level: int = 1
+## Optional prerequisite: ID of flora required before this dino can be created
+@export var required_flora_id: String = ""
+## Level of the prerequisite flora required
+@export var required_flora_level: int = 1
+
 @export_group("Passive Economy")
 ## Base cost to create the first dinosaur of this species
 @export var base_cost: float = 50.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://Scenes/UI/hud.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_drop.svg" id="2_drop"]
@@ -7,6 +7,14 @@
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_leaf.svg" id="5_leaf"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_footprint.svg" id="6_footprint"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Icons/icon_close.svg" id="7_close"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+bg_color = Color(0.1, 0.14, 0.17, 0.92)
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 4
+shadow_offset = Vector2(0, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sheet"]
 bg_color = Color(0.12, 0.16, 0.18, 0.88)
@@ -36,18 +44,26 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_script")
 
-[node name="TopBar" type="HBoxContainer" parent="RootControl"]
+[node name="TopBarPanel" type="PanelContainer" parent="RootControl"]
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 56.0
 grow_horizontal = 2
-mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
 
-[node name="DropIcon" type="TextureRect" parent="RootControl/TopBar"]
+[node name="Margin" type="MarginContainer" parent="RootControl/TopBarPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 6
+
+[node name="TopHBox" type="HBoxContainer" parent="RootControl/TopBarPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DropIcon" type="TextureRect" parent="RootControl/TopBarPanel/Margin/TopHBox"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
@@ -55,20 +71,31 @@ texture = ExtResource("2_drop")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VitalityLabel" type="Label" parent="RootControl/TopBar"]
+[node name="VitalityVBox" type="VBoxContainer" parent="RootControl/TopBarPanel/Margin/TopHBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 0
+
+[node name="VitalityLabel" type="Label" parent="RootControl/TopBarPanel/Margin/TopHBox/VitalityVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "900 M"
-vertical_alignment = 1
 
-[node name="Spacer" type="Control" parent="RootControl/TopBar"]
+[node name="RateLabel" type="Label" parent="RootControl/TopBarPanel/Margin/TopHBox/VitalityVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.88, 0.65, 1)
+theme_override_font_sizes/font_size = 11
+text = "+0.00/s"
+
+[node name="Spacer" type="Control" parent="RootControl/TopBarPanel/Margin/TopHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="MenuBtn" type="TextureButton" parent="RootControl/TopBar"]
+[node name="MenuBtn" type="TextureButton" parent="RootControl/TopBarPanel/Margin/TopHBox"]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_vertical = 4
