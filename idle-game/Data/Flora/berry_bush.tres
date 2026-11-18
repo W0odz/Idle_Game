@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FloraData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Resources/flora_data.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://Scenes/Flora/FloraUnit.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_script")
+id = "berry_bush"
+display_name = "Berry Bush"
+description = "A primordial bush bearing energetic berries. Increases vitality gathered with each tap."
+base_cost = 10.0
+cost_multiplier = 1.15
+click_power_per_level = 1.0
+model_scene = ExtResource("2_scene")
