@@ -22,22 +22,23 @@ var current_tab: Tab = Tab.NONE
 var active_rows: Dictionary = {}
 var recent_tap_times: Array[float] = []
 
-# Vertical Y coordinates of bottom_sheet.position.y:
-# In an 800px high viewport:
-# 1. POS_CLOSED = 800.0 (completely offscreen below the bottom bar)
-# 2. POS_MID = 420.0 (open halfway, diorama visible above)
-# 3. POS_FULL = 76.0 (full screen, just beneath the top bar)
-const POS_CLOSED: float = 800.0
-const POS_MID: float = 420.0
-const POS_FULL: float = 76.0
-
 var is_dragging_sheet: bool = false
 var drag_start_mouse_y: float = 0.0
-var drag_start_sheet_y: float = 0.0
+var drag_start_offset_top: float = 0.0
 var active_tween: Tween = null
 
 const COLOR_ACTIVE: Color = Color(0.45, 0.88, 0.42, 1.0)
 const COLOR_INACTIVE: Color = Color(1.0, 1.0, 1.0, 1.0)
+
+# Offset helpers (OffsetTop relative to bottom edge)
+func get_closed_offset() -> float:
+	return 20.0 # Pushes below the viewport completely
+
+func get_mid_offset() -> float:
+	return -size.y * 0.48 # Exactly ~48% of screen height regardless of device ratio
+
+func get_full_offset() -> float:
+	return -size.y + 76.0 # Extends up to just beneath top bar
 
 func _ready() -> void:
 	CurrencyManager.vitality_changed.connect(_on_vitality_changed)
@@ -53,7 +54,9 @@ func _ready() -> void:
 
 	update_vitality_display()
 	update_tab_icons_color()
-	bottom_sheet.position.y = POS_CLOSED
+	
+	# Initial state: closed
+	bottom_sheet.offset_top = get_closed_offset()
 	bottom_sheet.visible = false
 
 func _process(delta: float) -> void:
@@ -82,26 +85,24 @@ func update_vitality_display() -> void:
 
 func on_tab_button_pressed(tab: Tab) -> void:
 	if current_tab == tab and bottom_sheet.visible:
-		# Clicking the already selected tab toggles it closed
 		close_sheet()
 		return
 
-	# Switching to a different tab keeps the sheet open at its current height!
 	current_tab = tab
 	bottom_sheet.visible = true
 	close_sheet_btn.visible = true
 	update_tab_icons_color()
 	build_items()
 
-	# Only animate if opening from closed state
-	if bottom_sheet.position.y > POS_MID + 30.0:
-		snap_sheet_to(POS_MID, true)
+	# If currently closed or lower than mid, animate up to mid
+	if bottom_sheet.offset_top > get_mid_offset() + 30.0:
+		snap_sheet_to(get_mid_offset(), true)
 
 func close_sheet() -> void:
 	current_tab = Tab.NONE
 	update_tab_icons_color()
 	close_sheet_btn.visible = false
-	snap_sheet_to(POS_CLOSED, true, func():
+	snap_sheet_to(get_closed_offset(), true, func():
 		bottom_sheet.visible = false
 	)
 
@@ -115,7 +116,7 @@ func _on_handle_gui_input(event: InputEvent) -> void:
 		if event.pressed:
 			is_dragging_sheet = true
 			drag_start_mouse_y = event.global_position.y
-			drag_start_sheet_y = bottom_sheet.position.y
+			drag_start_offset_top = bottom_sheet.offset_top
 			if active_tween and active_tween.is_valid():
 				active_tween.kill()
 		else:
@@ -125,39 +126,42 @@ func _on_handle_gui_input(event: InputEvent) -> void:
 
 	elif event is InputEventMouseMotion and is_dragging_sheet:
 		var delta_y: float = event.global_position.y - drag_start_mouse_y
-		var new_y: float = drag_start_sheet_y + delta_y
-		bottom_sheet.position.y = clampf(new_y, POS_FULL, POS_CLOSED)
+		var new_offset: float = drag_start_offset_top + delta_y
+		bottom_sheet.offset_top = clampf(new_offset, get_full_offset(), get_closed_offset())
 
 	elif event is InputEventScreenDrag and is_dragging_sheet:
 		var delta_y: float = event.relative.y
-		var new_y: float = bottom_sheet.position.y + delta_y
-		bottom_sheet.position.y = clampf(new_y, POS_FULL, POS_CLOSED)
+		var new_offset: float = bottom_sheet.offset_top + delta_y
+		bottom_sheet.offset_top = clampf(new_offset, get_full_offset(), get_closed_offset())
 
 func finalize_drag_snap() -> void:
-	var current_y: float = bottom_sheet.position.y
+	var current_top: float = bottom_sheet.offset_top
+	var mid := get_mid_offset()
+	var full := get_full_offset()
+	var closed := get_closed_offset()
 
-	var close_threshold: float = (POS_MID + POS_CLOSED) / 2.0
-	var expand_threshold: float = (POS_MID + POS_FULL) / 2.0
+	var close_threshold := (mid + closed) / 2.0
+	var expand_threshold := (mid + full) / 2.0
 
-	if current_y > close_threshold:
+	if current_top > close_threshold:
 		close_sheet()
-	elif current_y < expand_threshold:
-		snap_sheet_to(POS_FULL, true)
+	elif current_top < expand_threshold:
+		snap_sheet_to(full, true)
 	else:
-		snap_sheet_to(POS_MID, true)
+		snap_sheet_to(mid, true)
 
-func snap_sheet_to(target_y: float, animate: bool = true, on_complete: Callable = Callable()) -> void:
+func snap_sheet_to(target_offset: float, animate: bool = true, on_complete: Callable = Callable()) -> void:
 	if active_tween and active_tween.is_valid():
 		active_tween.kill()
 
 	if not animate:
-		bottom_sheet.position.y = target_y
+		bottom_sheet.offset_top = target_offset
 		if on_complete.is_valid():
 			on_complete.call()
 		return
 
 	active_tween = create_tween()
-	active_tween.tween_property(bottom_sheet, "position:y", target_y, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	active_tween.tween_property(bottom_sheet, "offset_top", target_offset, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if on_complete.is_valid():
 		active_tween.tween_callback(on_complete)
 
